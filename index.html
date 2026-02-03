@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Be My Valentine 💖</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    font-family: 'Segoe UI', sans-serif;
+    overflow: hidden;
+  }
+
+  .hearts { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+  .heart-float { position: absolute; bottom: -20px; font-size: 18px; animation: floatUp linear infinite; opacity: 0.8; }
+  @keyframes floatUp { from { transform: translateY(0) scale(1); opacity: 0.9; } to { transform: translateY(-110vh) scale(1.5); opacity: 0; } }
+
+  .card {
+    background: white; padding: 20px; width: 90%; max-width: 350px;
+    border-radius: 25px; text-align: center; box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    position: relative; z-index: 2;
+  }
+
+  h1 { color: #e63946; font-size: 24px; }
+  p { color: #555; font-size: 16px; }
+
+  .buttons { position: relative; height: 80px; margin-top: 10px; }
+  button {
+    padding: 12px 18px; font-size: 16px; border: none; border-radius: 20px;
+    cursor: pointer; user-select: none;
+  }
+  #yesBtn { background: #e63946; color: white; }
+  #noBtn { background: #ccc; position: absolute; left: 140px; top: 0; }
+
+  .heart { font-size: 28px; animation: beat 1s infinite; }
+  @keyframes beat { 0%,100%{transform:scale(1);}50%{transform:scale(1.3);} }
+
+  .folder { cursor: pointer; margin: 15px 0; }
+  .folder-icon { font-size: 40px; }
+  .folder-title { font-weight: bold; color: #e63946; }
+  .letter { display: none; margin-top: 15px; background: #fff5f7; padding: 15px; border-radius: 15px; text-align: left; font-size: 14px; }
+  .date { font-size: 12px; color: #999; margin-bottom: 8px; }
+
+  #musicToggle {
+    position: fixed; top: 10px; right: 10px; background: #e63946;
+    border: none; color: white; font-size: 20px; border-radius: 50%;
+    width: 40px; height: 40px; cursor: pointer; z-index: 5;
+    display: flex; justify-content: center; align-items: center; user-select: none;
+  }
+  #musicToggle.paused::after { content: "▶️"; }
+  #musicToggle.playing::after { content: "⏸️"; }
+
+  .confetti-heart {
+    position: fixed; pointer-events: none; font-size: 20px; user-select: none;
+    animation: confettiUp 1.5s ease forwards;
+  }
+  @keyframes confettiUp {
+    0% { opacity: 1; transform: translate(0,0) rotate(0deg) scale(1); }
+    100% { opacity: 0; transform: translate(var(--x), var(--y)) rotate(720deg) scale(0.5); }
+  }
+</style>
+</head>
+<body>
+
+<div class="hearts" id="hearts"></div>
+
+<button id="musicToggle" class="paused" aria-label="Toggle background music"></button>
+
+<div class="card" id="card">
+  <h1>Hi Bebe!! 💕</h1>
+  <p><strong>Will you be my Valentine?</strong></p>
+  <div class="heart">❤️</div>
+  <p>You make my heart smile every single day 🌹</p>
+
+  <div class="buttons">
+    <button id="yesBtn" onclick="sayYes()">Yes 💖</button>
+    <button id="noBtn" onmouseover="moveNo()">No 🙈</button>
+  </div>
+</div>
+
+<div id="youtubePlayer" style="display:none;"></div>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+/* Floating hearts */
+const heartsContainer = document.getElementById("hearts");
+setInterval(() => {
+  const heart = document.createElement("div");
+  heart.className = "heart-float";
+  heart.textContent = "❤️";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.animationDuration = 4 + Math.random() * 4 + "s";
+  heart.style.fontSize = 14 + Math.random() * 20 + "px";
+  heartsContainer.appendChild(heart);
+  setTimeout(() => heart.remove(), 8000);
+}, 400);
+
+/* Letter */
+let letterOpened = false, typingDone = false;
+const letterText = `My love,
+
+From the moment you came into my life, everything changed for the better.
+You make my days brighter, my heart lighter, and my smile wider.
+
+Thank you for being my Valentine and my favorite person.
+I love you more than words can say ❤️`;
+
+function toggleLetter() {
+  const letter = document.getElementById("letter");
+  const icon = document.getElementById("folderIcon");
+  letterOpened = !letterOpened;
+  letter.style.display = letterOpened ? "block" : "none";
+  icon.textContent = letterOpened ? "📂" : "📁";
+  if(letterOpened && !typingDone) { typeLetter(); typingDone = true; }
+}
+function typeLetter() {
+  const target = document.getElementById("typedText");
+  let i=0;
+  function type() { if(i<letterText.length){ target.textContent+=letterText.charAt(i); i++; setTimeout(type,35); } }
+  type();
+}
+
+/* No button */
+function moveNo() {
+  const noBtn = document.getElementById("noBtn");
+  const card = document.querySelector(".card");
+  const maxX = card.clientWidth - noBtn.offsetWidth;
+  const maxY = card.clientHeight - noBtn.offsetHeight;
+  noBtn.style.left = Math.random()*maxX + "px";
+  noBtn.style.top = Math.random()*maxY + "px";
+}
+
+/* Confetti hearts */
+function createConfettiHearts() {
+  for(let i=0;i<30;i++){
+    const confetti = document.createElement("div");
+    confetti.className="confetti-heart"; confetti.textContent="💖";
+    const rect = document.getElementById("yesBtn").getBoundingClientRect();
+    confetti.style.left = rect.left + rect.width/2 + "px";
+    confetti.style.top = rect.top + rect.height/2 + "px";
+    confetti.style.setProperty("--x",(Math.random()-0.5)*200 + "px");
+    confetti.style.setProperty("--y",-(Math.random()*200+100)+"px");
+    document.body.appendChild(confetti);
+    confetti.addEventListener("animationend",()=>confetti.remove());
+  }
+}
+
+/* YouTube Player */
+let player;
+function onYouTubeIframeAPIReady(){
+  player = new YT.Player('youtubePlayer',{
+    height:'0', width:'0',
+    videoId:'Z6nzdtuHi0Y',
+    playerVars:{autoplay:1, loop:1, playlist:'Z6nzdtuHi0Y', controls:0, mute:1},
+    events:{onReady:(event)=>{ player = event.target; }}
+  });
+}
+
+/* Music toggle */
+const musicToggle=document.getElementById("musicToggle");
+musicToggle.onclick=()=>{
+  if(!player) return;
+  if(player.getPlayerState()!==1){ 
+    player.unMute(); 
+    player.playVideo(); 
+    musicToggle.classList.remove("paused"); 
+    musicToggle.classList.add("playing"); 
+  } else { 
+    player.pauseVideo(); 
+    musicToggle.classList.remove("playing"); 
+    musicToggle.classList.add("paused"); 
+  }
+}
+
+/* Yes button */
+function sayYes(){
+  createConfettiHearts();
+  document.getElementById("card").innerHTML=`
+    <h1>I LOVE YOU JAIJAI!!! 💘</h1>
+    <div class="heart">❤️❤️❤️</div>
+    <div class="folder" onclick="toggleLetter()">
+      <div id="folderIcon" class="folder-icon">📁</div>
+      <div class="folder-title">Love Letter</div>
+    </div>
+    <div id="letter" class="letter">
+      <div class="date">${new Date().toDateString()}</div>
+      <div id="typedText"></div>
+    </div>`;
+  if(player){ 
+    player.unMute(); 
+    player.playVideo(); 
+    musicToggle.classList.remove("paused"); 
+    musicToggle.classList.add("playing"); 
+  }
+}
+</script>
+</body>
+</html>
