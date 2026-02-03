@@ -1,0 +1,83 @@
+.folder {
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+.folder-icon {
+    font-size: 50px;
+}
+
+.folder-title {
+    font-weight: bold;
+    color: #e63946;
+}
+
+.letter {
+    display: none;
+    margin-top: 15px;
+    padding: 15px;
+    background: #fff0f3;
+    border-radius: 15px;
+    color: #444;
+    font-size: 15px;
+    animation: pop 0.3s ease;
+}
+.folder {
+    margin-top: 20px;
+    cursor: pointer;
+    background: #f1f3f5;
+    padding: 15px;
+    border-radius: 12px;
+    display: inline-block;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+}
+
+.folder-icon {
+    font-size: 48px;
+}
+
+.folder-title {
+    font-weight: bold;
+    color: #333;
+    margin-top: 5px;
+}
+
+.letter {
+    display: none;
+    margin-top: 15px;
+    padding: 15px;
+    background: #fff0f3;
+    border-radius: 15px;
+    font-size: 15px;
+    color: #444;
+    text-align: left;
+    white-space: pre-line;
+}
+
+.date {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 8px;
+}
+.valentine-question {
+    margin: 12px 0;
+    padding: 10px 14px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #e63946;
+    background: linear-gradient(135deg, #ffe6eb, #fff);
+    border-radius: 20px;
+    box-shadow: 0 0 12px rgba(230, 57, 70, 0.35);
+    animation: glow 1.5s infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        transform: scale(1);
+        box-shadow: 0 0 8px rgba(230, 57, 70, 0.4);
+    }
+    to {
+        transform: scale(1.05);
+        box-shadow: 0 0 18px rgba(230, 57, 70, 0.7);
+    }
+}
